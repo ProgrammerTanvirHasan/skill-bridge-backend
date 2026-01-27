@@ -1,0 +1,146 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User { //1
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String?
+  name      String?
+  role      Role     @default(STUDENT)
+
+  tutorProfile TutorProfile?
+  bookings     Booking[] @relation("StudentBookings")
+  reviews      Review[]
+
+  sessions Session[]
+  accounts Account[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+
+model TutorProfile { //2
+  id          Int     @id @default(autoincrement())
+  bio         String?
+  hourlyRate Float
+
+  user   User @relation(fields: [userId], references: [id])
+  userId String @unique
+
+  categories TutorCategory[]
+  bookings   Booking[] @relation("TutorBookings")
+  reviews    Review[]
+
+  createdAt DateTime @default(now())
+}
+
+model Category { //3
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  tutors TutorCategory[]
+}
+
+model TutorCategory {
+  tutorProfile TutorProfile @relation(fields: [tutorProfileId], references: [id])
+  tutorProfileId Int
+
+  category Category @relation(fields: [categoryId], references: [id])
+  categoryId Int
+
+  @@id([tutorProfileId, categoryId])
+}
+
+model Booking { //4
+  id Int @id @default(autoincrement())
+
+  student User @relation("StudentBookings", fields: [studentId], references: [id])
+  studentId String
+
+  tutor TutorProfile @relation("TutorBookings", fields: [tutorId], references: [id])
+  tutorId Int
+
+  scheduledAt DateTime
+  status BookingStatus @default(PENDING)
+
+  createdAt DateTime @default(now())
+}
+
+model Review { //6
+  id Int @id @default(autoincrement())
+
+  rating Int
+  comment String?
+
+  student User @relation(fields: [studentId], references: [id])
+  studentId String
+
+  tutor TutorProfile @relation(fields: [tutorId], references: [id])
+  tutorId Int
+
+  createdAt DateTime @default(now())
+}
+
+model Session {
+  id String @id @default(uuid())
+  expiresAt DateTime
+  token String @unique
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Account {
+  id String @id @default(uuid())
+  providerId String
+  accountId String
+
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  accessToken String?
+  refreshToken String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Verification {
+  id String @id @default(uuid())
+  identifier String
+  value String
+  expiresAt DateTime
+
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  STUDENT
+  TUTOR
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+
+
