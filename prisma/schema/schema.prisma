@@ -31,8 +31,6 @@ model User {
   updatedAt DateTime @updatedAt
 }
 
-
-
 model TutorProfile { 
   id          Int     @id @default(autoincrement())
   bio         String?
@@ -54,6 +52,8 @@ model Category {
 
   tutors TutorCategory[]
 }
+
+
 
 model TutorCategory {
   tutorProfile TutorProfile @relation(fields: [tutorProfileId], references: [id])
@@ -133,6 +133,7 @@ model Verification {
 enum Role {
   STUDENT
   TUTOR
+  ADMIN
 }
 
 enum BookingStatus {
