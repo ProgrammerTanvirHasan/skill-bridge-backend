@@ -4,6 +4,7 @@ import { auth } from "../lib/auth";
 export enum userRole {
   STUDENT = "STUDENT",
   TUTORS = "TUTORS",
+  ADMIN = "ADMIN",
 }
 
 declare global {
@@ -29,9 +30,6 @@ const middleware = (...roles: userRole[]) => {
       if (!session) {
         return res.status(401).json({ message: "Unauthorized" });
       }
-      if (!session.user.emailVerified) {
-        return res.status(404).json({ message: "Not verified" });
-      }
 
       req.user = {
         id: session.user.id,
@@ -41,7 +39,7 @@ const middleware = (...roles: userRole[]) => {
       };
 
       if (roles.length && !roles.includes(req.user.role as userRole)) {
-        return res.status(403).json({ message: "Forbidden Access to" });
+        return res.status(403).json({ message: "Forbidden Access" });
       }
       next();
     } catch (error) {
