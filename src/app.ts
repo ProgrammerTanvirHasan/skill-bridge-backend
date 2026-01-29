@@ -3,6 +3,7 @@ import { toNodeHandler } from "better-auth/node";
 import { auth } from "./lib/auth";
 import cors from "cors";
 import { tutorsRouter } from "./modules/tutors/tutors.route";
+
 const app = express();
 app.use(
   cors({
