@@ -19,7 +19,7 @@ model User {
   
   name      String?
   role      Role     @default(STUDENT)
-
+   image String? 
   tutorProfile TutorProfile?
   bookings     Booking[] @relation("StudentBookings")
   reviews      Review[]
@@ -127,7 +127,10 @@ model Account {
   password String? 
   accessToken String?
   refreshToken String?
-
+    idToken            String?
+      accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+    scope                 String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -139,6 +142,7 @@ model Verification {
   expiresAt DateTime
 
   createdAt DateTime @default(now())
+   updatedAt DateTime @updatedAt
 }
 
 enum Role {

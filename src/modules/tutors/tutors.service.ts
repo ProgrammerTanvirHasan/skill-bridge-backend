@@ -7,6 +7,13 @@ interface CreateTutorProfileInput {
   categoryIds?: number[];
   status: TutorStatus;
 }
+export interface UpdateTutorProfileInput {
+  bio?: string;
+  hourlyRate?: number;
+  status?: 'ACTIVE' | 'INACTIVE';
+  categoryIds?: string[];
+}
+
 
 const createTutorProfile = async (
   userId: string,
@@ -73,8 +80,11 @@ const getTutorById = async (id: number) => {
   });
 };
 
+
+
 export const tutorsService = {
   createTutorProfile,
   getAllTutors,
   getTutorById,
+
 };

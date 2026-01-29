@@ -9,4 +9,13 @@ router.post(
   tutorsController.createTutorProfile,
 );
 
+router.get(
+  "/profiles",
+  tutorsController.getAllTutors,
+);
+router.get(
+  "/profiles/:id",
+  tutorsController.getTutorById,
+);
+
 export const tutorsRouter = router;
