@@ -4,13 +4,16 @@ CREATE TYPE "Role" AS ENUM ('STUDENT', 'TUTOR', 'ADMIN');
 -- CreateEnum
 CREATE TYPE "BookingStatus" AS ENUM ('PENDING', 'CONFIRMED', 'COMPLETED', 'CANCELLED');
 
+-- CreateEnum
+CREATE TYPE "TutorStatus" AS ENUM ('AVAILABLE', 'BUSY', 'OFFLINE');
+
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "password" TEXT,
     "name" TEXT,
     "role" "Role" NOT NULL DEFAULT 'STUDENT',
+    "emailVerified" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -20,9 +23,10 @@ CREATE TABLE "User" (
 -- CreateTable
 CREATE TABLE "TutorProfile" (
     "id" SERIAL NOT NULL,
-    "bio" TEXT,
+    "bio" TEXT NOT NULL,
     "hourlyRate" DOUBLE PRECISION NOT NULL,
     "userId" TEXT NOT NULL,
+    "status" "TutorStatus" NOT NULL DEFAULT 'AVAILABLE',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "TutorProfile_pkey" PRIMARY KEY ("id")
@@ -73,6 +77,8 @@ CREATE TABLE "Session" (
     "id" TEXT NOT NULL,
     "expiresAt" TIMESTAMP(3) NOT NULL,
     "token" TEXT NOT NULL,
+    "ipAddress" TEXT,
+    "userAgent" TEXT,
     "userId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -86,6 +92,7 @@ CREATE TABLE "Account" (
     "providerId" TEXT NOT NULL,
     "accountId" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
+    "password" TEXT,
     "accessToken" TEXT,
     "refreshToken" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
