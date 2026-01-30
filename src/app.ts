@@ -7,6 +7,7 @@ import { bookingRouter } from "./modules/booking/booking.route";
 import { categoriesRouter } from "./modules/categories/categories.route";
 import { reviewRouter } from "./modules/review/review.route";
 import { tutorRouter } from "./modules/tutors/tutor.route";
+import { userRouter } from "./modules/user/user.route";
 
 const app = express();
 app.use(
@@ -18,7 +19,7 @@ app.use(
 app.use(express.json());
 
 app.all("/api/auth/*splat", toNodeHandler(auth));
-
+app.use("/api/user", userRouter);
 app.use("/api/tutor", tutorRouter);
 app.use("/api/categories", categoriesRouter);
 app.use("/api/bookings", bookingRouter);
