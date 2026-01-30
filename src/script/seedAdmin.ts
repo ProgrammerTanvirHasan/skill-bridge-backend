@@ -1,14 +1,13 @@
-import { prisma } from "../lib/prisma";
+import { randomUUID } from "crypto";
 import bcrypt from "bcrypt";
+import { prisma } from "../lib/prisma";
 
 async function seedAdmin() {
   try {
     const adminEmail = "tanvir@email.com";
 
     const existing = await prisma.user.findUnique({
-      where: {
-        email: adminEmail,
-      },
+      where: { email: adminEmail },
     });
 
     if (existing) {
@@ -17,13 +16,24 @@ async function seedAdmin() {
     }
 
     const hashedPassword = await bcrypt.hash("tanvir123", 10);
+    const userId = randomUUID();
 
     await prisma.user.create({
       data: {
+        id: userId,
         name: "Tanvir",
         email: adminEmail,
-        password: hashedPassword,
         role: "ADMIN",
+      },
+    });
+
+    await prisma.account.create({
+      data: {
+        id: randomUUID(),
+        userId,
+        providerId: "credential",
+        accountId: userId,
+        password: hashedPassword,
       },
     });
 

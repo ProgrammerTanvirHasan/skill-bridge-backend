@@ -2,7 +2,11 @@ import express from "express";
 import { toNodeHandler } from "better-auth/node";
 import { auth } from "./lib/auth";
 import cors from "cors";
-import { tutorsRouter } from "./modules/tutors/tutors.route";
+import { adminRouter } from "./modules/admin/admin.route";
+import { bookingRouter } from "./modules/booking/booking.route";
+import { categoriesRouter } from "./modules/categories/categories.route";
+import { reviewRouter } from "./modules/review/review.route";
+import { tutorRouter } from "./modules/tutors/tutor.route";
 
 const app = express();
 app.use(
@@ -11,14 +15,18 @@ app.use(
     credentials: true,
   }),
 );
-
-app.all("/api/auth/*splat", toNodeHandler(auth));
 app.use(express.json());
 
-app.use("/tutors", tutorsRouter);
+app.all("/api/auth/*splat", toNodeHandler(auth));
+
+app.use("/api/tutor", tutorRouter);
+app.use("/api/categories", categoriesRouter);
+app.use("/api/bookings", bookingRouter);
+app.use("/api/reviews", reviewRouter);
+app.use("/api/admin", adminRouter);
 
 app.get("/", (req, res) => {
-  res.send("skill bridge runnings");
+  res.send("SkillBridge API running");
 });
 
 export default app;
