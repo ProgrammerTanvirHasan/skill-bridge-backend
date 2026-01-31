@@ -8,6 +8,8 @@ import { categoriesRouter } from "./modules/categories/categories.route";
 import { reviewRouter } from "./modules/review/review.route";
 import { tutorRouter } from "./modules/tutors/tutor.route";
 import { userRouter } from "./modules/user/user.route";
+import { notFound } from "./middleware/notFound";
+import errorHandler from "./middleware/globalErrorHandler";
 
 const app = express();
 app.use(
@@ -29,5 +31,7 @@ app.use("/api/admin", adminRouter);
 app.get("/", (req, res) => {
   res.send("SkillBridge API running");
 });
+app.use(notFound);
+app.use(errorHandler);
 
 export default app;
