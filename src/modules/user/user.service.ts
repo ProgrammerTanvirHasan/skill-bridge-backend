@@ -1,6 +1,6 @@
 import { prisma } from "../../lib/prisma";
 
-const getAlluser = async () => {
+const getAllUsers = async () => {
   return prisma.user.findMany({
     select: {
       name: true,
@@ -10,6 +10,19 @@ const getAlluser = async () => {
   });
 };
 
+const getUserById = async (id: string) => {
+  return prisma.user.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+    },
+  });
+};
+
 export const userService = {
-  getAlluser,
+  getAllUsers,
+  getUserById,
 };
