@@ -32,6 +32,7 @@ const middleware = (...roles: userRole[]) => {
         return res.status(401).json({ message: "Unauthorized" });
       }
 
+
       const dbUser = await prisma.user.findUnique({
         where: { id: session.user.id },
         select: { status: true },

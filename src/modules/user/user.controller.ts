@@ -1,36 +1,45 @@
 import type { Request, Response } from "express";
 import { userService } from "./user.service";
 
-// Get all users
+// all users
 const getAllUsersController = async (req: Request, res: Response) => {
   try {
     const users = await userService.getAllUsers();
-    res.status(200).json({ success: true, data: users });
-  } catch (error) {
-    res.status(500).json({ success: false, message: "Server Error" });
+
+    res.status(200).json({
+      success: true,
+      data: users,
+    });
+  } catch {
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
   }
 };
 
-const getLoggedInUserController = async (req: Request, res: Response) => {
+const getLoggedInUserController = async (req: any, res: Response) => {
   try {
-    // ধরছি user id token/session থেকে middleware বা অন্য জায়গা থেকে req.user.id এ set করা আছে
-    const userId = req.user?.id;
-
-    if (!userId) {
-      return res.status(401).json({ success: false, message: "Unauthorized" });
-    }
+    const userId = req.user.id;
 
     const user = await userService.getUserById(userId);
 
     if (!user) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User not found" });
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
     }
 
-    res.status(200).json({ success: true, user });
-  } catch (error) {
-    res.status(500).json({ success: false, message: "Server Error" });
+    res.status(200).json({
+      success: true,
+      data: user,
+    });
+  } catch {
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
   }
 };
 
