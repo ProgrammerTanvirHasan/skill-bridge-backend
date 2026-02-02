@@ -14,6 +14,30 @@ const getAllCategories = async (
   }
 };
 
+const postCategories = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { name } = req.body;
+
+    if (!name || typeof name !== "string") {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid category name" });
+    }
+
+    const result = await categoriesService.postCategories(name);
+    res.status(201).json({ success: true, data: result });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+
 export const categoriesController = {
   getAllCategories,
+  postCategories,
 };

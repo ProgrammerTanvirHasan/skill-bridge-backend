@@ -16,10 +16,18 @@ const createTutorProfile = async (
       });
     }
 
-    const result = await tutorsService.createTutorProfile(
-      user.id as string,
-      req.body,
-    );
+    const body = req.body;
+
+    const categoryIds = Array.isArray(body.categoryIds)
+      ? body.categoryIds.map(Number)
+      : [];
+
+    const result = await tutorsService.createTutorProfile(user.id as string, {
+      bio: body.bio,
+      hourlyRate: body.hourlyRate,
+      status: body.status,
+      categoryIds,
+    });
 
     res.status(201).json({
       success: true,
